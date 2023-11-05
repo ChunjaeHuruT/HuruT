@@ -147,24 +147,15 @@ public class HuruTMain {
 
         // 수업 번호 잘못 입력 시, 메인 화면으로 돌아간다.
         if(!inCharge){
-            System.out.println("본인이 담당하고 있는 수업이 아니기 때문에 수정하실 수 없습니다.");
+            System.out.println("본인이 담당하고 있는 수업이 아니기 때문에 삭제하실 수 없습니다.");
             System.out.println("본인이 담당하는 수업 번호를 입력해주세요.");
             return;
         }
 
-        // 수업 수정 정보 입력
-        System.out.print("수업 제목 : ");
-        String className = br.readLine();
-        System.out.print("가격 : ");  // [리팩토링] 숫자 입력 예외 발생 시, 다시 입력 받기
-        int price = Integer.parseInt(br.readLine());
-        System.out.println("- 난이도는 1=쉬움 / 2=보통 / 3=어려움 입니다. -");
-        System.out.print("난이도 : "); // [리팩토링] 1-3 예외 발생 시, 다시 입력 받기
-        int difficulty = Integer.parseInt(br.readLine());
+        // 수업 삭제
+        classServiceJy.deleteClass(classIdx);
 
-        // 수업 수정
-        classServiceJy.updateClass(classIdx, className, price, difficulty);
-
-        System.out.println("\n수정을 완료하였습니다.");
+        System.out.println("\n삭제를 완료하였습니다.");
         System.out.println("**************************************************\n");
     }
 

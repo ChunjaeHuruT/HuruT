@@ -42,4 +42,8 @@ public class ClassService_jy {
     }
 
     // 수업 삭제
+    public void deleteClass (int classIdx){
+        // 수업 삭제
+        classDAOJy.deleteClass(classIdx);
+    }
 }

@@ -62,6 +62,6 @@ public class ClassDAO_jy {
     // 수업 삭제
     public void deleteClass(int classIdx){
         mapper.deleteClass(classIdx);
-        session.commit(); // update, delete, insert
+        session.commit();
     }
 }
