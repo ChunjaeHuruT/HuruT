@@ -191,7 +191,7 @@ public class HuruTMain {
         // 선생님 로그인 후 welcome 화면
         // 1. 수업 관리 2. 학습 관리 3. 마이페이지 4. 로그아웃
         System.out.println("**************************************************\n");
-        System.out.println(teacherJy.getTeacherName()+" 선생님 반갑습니다.");
+        System.out.println(teacherJy.getTeacherName()+" 선생님 반갑습니다.\n");
         System.out.println("**************************************************\n");
 
         // 선생님 관련 서비스 객체
@@ -203,8 +203,10 @@ public class HuruTMain {
 
         while(logIn) {  // 로그아웃 되기 전까지 반복
             // inputByTeacherInWelcome
+            System.out.println("**************************************************\n");
             System.out.println("이용할 메뉴를 선택해 주세요.");
             System.out.println("\n1. 수업 관리 2. 학습 관리 3. 마이페이지 4. 로그아웃");
+            System.out.print("메뉴 : ");
             int inputByTeacherInWelcome = Integer.parseInt(br.readLine());
             System.out.println("**************************************************\n");
 
@@ -216,7 +218,8 @@ public class HuruTMain {
                     getClasses();
 
                     // 수업 관리 서브 메뉴 inputByTeacherClassManage
-                    System.out.println("1. 수업 등록하기 2. 수업 수정하기 3. 수업 삭제하기 4. 질문 보러 가기");
+                    System.out.println("1. 수업 등록하기 2. 수업 수정하기 3. 수업 삭제하기 4. 질문 보러 가기 5. 메인으로 돌아가기");
+                    System.out.print("메뉴 : ");
                     int inputByTeacherClassManage = Integer.parseInt(br.readLine());
 
                     if(inputByTeacherClassManage == 1){ // 1. 수업 등록하기
@@ -227,8 +230,10 @@ public class HuruTMain {
                         deleteClass();
                     }else if(inputByTeacherClassManage == 4){ // 4. 질문 보러 가기
 
-                    }else{
-
+                    }else if(inputByTeacherClassManage == 5){ // 5. 메인으로 돌아가기
+                        
+                    }else{  // 예외
+                        System.out.println("잘못 입력하셨습니다.");
                     }
                     break;
                 // 2. 학습 관리
@@ -246,7 +251,7 @@ public class HuruTMain {
                     break;
                 // 입력 예외
                 default:
-                    System.out.println("잘못 입력하였습니다.");
+                    System.out.println("잘못 입력하셨습니다.");
                     System.out.println("메뉴를 다시 입력해 주세요.");
             }
         }
