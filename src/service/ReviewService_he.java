@@ -30,7 +30,7 @@ public class ReviewService_he {
     }
 
     // 강의평 등록
-    // 받아와야 하는 매개변수: 로그인 중인 학생의 idx, 강의평 등록 대상인 강의의 idx
+    // 받아와야 하는 매개변수: 로그인 중인 학생의 idx, 강의평 등록 대상인 수업의 idx
     public void addReview(int studentIdx, int classIdx) {
 
         String contents = "";
