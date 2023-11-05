@@ -9,7 +9,7 @@
     id는 메서드명, resultType 리턴 타입(풀 패키지명), parameterType 매개변수 -->
     <insert id="insertClass" parameterType="dto.Class_jy">
         INSERT INTO classes(class_name, teacher_id, price, rating, difficulty)
-        values (#{className}, #{teacherId}, #{price}, 0, difficulty)
+        values (#{className}, #{teacherId}, #{price}, 0, #{difficulty})
     </insert>
 
     <select id="getClasses" parameterType="int" resultType="dto.Class_jy">

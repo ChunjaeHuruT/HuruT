@@ -22,6 +22,13 @@ public class HuruTMain {
     static TeacherService_jy teacherServiceJy;
     // 수업 관련 서비스 객체 (수업 등록/삭제/수정, 질문 보러 가기)
     static ClassService_jy classServiceJy;
+    // 로그인된 선생님 객체. 로그인 전에는 null
+    private static Teacher_jy teacherJy = null;
+    public static Teacher_jy getTeacherJy(){
+        return teacherJy;
+    }
+    // 입력 스트림
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     
     // jh
     
@@ -39,6 +46,26 @@ public class HuruTMain {
     // 필요한 기능을 메소드로 만들기
 
     // jy
+    // 수업 등록
+    public static void insertClass () throws Exception {
+        System.out.println("**************************************************\n");
+        System.out.println("아래의 정보를 입력하여 수업을 등록해 주세요.\n(난이도는 1=쉬움 / 2=보통 / 3=어려움 입니다.)\n");
+        System.out.println("**************************************************\n");
+        // 수업 정보 입력
+        System.out.print("수업 제목 : ");
+        String className = br.readLine();
+        System.out.print("가격 : ");  // [리팩토링] 숫자 입력 예외 발생 시, 다시 입력 받기
+        int price = Integer.parseInt(br.readLine());
+        System.out.print("난이도 : "); // [리팩토링] 1-3 예외 발생 시, 다시 입력 받기
+        int difficulty = Integer.parseInt(br.readLine());
+
+        // 수업 등록
+        classServiceJy.insertClass(className, price, difficulty);
+
+        System.out.println("\n등록을 완료하였습니다.");
+        System.out.println("**************************************************\n");
+    }
+
 
     
     // jh
@@ -66,15 +93,14 @@ public class HuruTMain {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         // 테스트용 teacher 객체
-        Teacher_jy teacherJy = new Teacher_jy(1, "jy@gmail.com", "이지연", "12345", LocalDateTime.now(), 0, 0);
+        // 로그인 된 선생님 객체
+        teacherJy = new Teacher_jy(1, "jy@gmail.com", "이지연", "12345", LocalDateTime.now(), 0, 0);
 
         // 선생님 로그인 후 welcome 화면
         // 1. 수업 관리 2. 학습 관리 3. 마이페이지 4. 로그아웃
         System.out.println("**************************************************\n");
         System.out.println(teacherJy.getTeacherName()+" 선생님 반갑습니다.");
         System.out.println("**************************************************\n");
-        System.out.println("이용할 메뉴를 선택해 주세요.");
-        System.out.println("\n1. 수업 관리 2. 학습 관리 3. 마이페이지 4. 로그아웃");
 
         // 선생님 관련 서비스 객체
         teacherServiceJy = new TeacherService_jy();
@@ -84,30 +110,49 @@ public class HuruTMain {
         boolean logIn = true;
 
         while(logIn) {  // 로그아웃 되기 전까지 반복
-            // 선생님이 welcome 화면에서 입력한 메뉴 번호
+            // inputByTeacherInWelcome
+            System.out.println("이용할 메뉴를 선택해 주세요.");
+            System.out.println("\n1. 수업 관리 2. 학습 관리 3. 마이페이지 4. 로그아웃");
             int inputByTeacherInWelcome = Integer.parseInt(br.readLine());
+            System.out.println("**************************************************\n");
 
             switch (inputByTeacherInWelcome) {
+                // 1. 수업 관리
                 case 1:
-                    // 1. 수업 관리
+                    System.out.println("[ 수업 관리 ]");
                     // 담당 수업 목록 출력
+                    classServiceJy.getClasses(teacherJy);
 
-                    // 수업 관리 서브 메뉴
-                    // 1. 수업 등록하기 2. 수업 수정하기 3. 수업 삭제하기 4. 질문 보러 가기
-                    teacherServiceJy.manageClasses();
-                    classServiceJy.insertClass(teacherJy);
+                    // 수업 관리 서브 메뉴 inputByTeacherClassManage
+                    System.out.println("1. 수업 등록하기 2. 수업 수정하기 3. 수업 삭제하기 4. 질문 보러 가기");
+                    int inputByTeacherClassManage = Integer.parseInt(br.readLine());
+
+                    if(inputByTeacherClassManage == 1){ // 1. 수업 등록하기
+                        insertClass();
+                    }else if(inputByTeacherClassManage == 2){ // 2. 수업 수정하기
+                        
+                    }else if(inputByTeacherClassManage == 3){ // 3. 수업 삭제하기
+
+                    }else if(inputByTeacherClassManage == 4){ // 4. 질문 보러 가기
+
+                    }else{
+
+                    }
                     break;
+                // 2. 학습 관리
                 case 2:
-                    // 2. 학습 관리
+
                     //classServiceJy.updateClass(teacherJy);
                     break;
+                // 3. 마이페이지
                 case 3:
-                    // 3. 마이페이지
+
                     break;
+                // 4. 로그아웃
                 case 4:
-                    // 4. 로그아웃
                     // logIn = false;
                     break;
+                // 입력 예외
                 default:
                     System.out.println("잘못 입력하였습니다.");
                     System.out.println("메뉴를 다시 입력해 주세요.");
