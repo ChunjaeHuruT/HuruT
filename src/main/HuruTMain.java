@@ -1,5 +1,6 @@
 package main;
 
+import dto.Class_jy;
 import dto.Teacher_jy;
 import factory.MyBatisMapperFactory;
 import org.apache.ibatis.session.SqlSession;
@@ -11,6 +12,7 @@ import service.TeacherService_jy;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class HuruTMain {
@@ -47,7 +49,7 @@ public class HuruTMain {
 
     // jy
     // 수업 등록
-    public static void insertClass () throws Exception {
+    public static void insertClass() throws Exception {
         System.out.println("**************************************************\n");
         System.out.println("아래의 정보를 입력하여 수업을 등록해 주세요.\n(난이도는 1=쉬움 / 2=보통 / 3=어려움 입니다.)\n");
         System.out.println("**************************************************\n");
@@ -66,6 +68,105 @@ public class HuruTMain {
         System.out.println("**************************************************\n");
     }
 
+    // 수업 조회: 본인 담당 수업만
+    public static void getClasses() throws Exception {
+        System.out.println("**************************************************\n");
+        System.out.println("[ "+teacherJy.getTeacherName()+" 선생님의 수업 리스트 ]");
+        System.out.println("수업 번호 | 수업 제목 | 총 수업 시간 | 학습 개수 | 가격 | 누적 수강생 | 난이도\n");
+        // 담당 수업 리스트를 불러온다.
+        ArrayList<Class_jy> classesList = classServiceJy.getClasses();
+        for(Class_jy classJy: classesList){
+            System.out.println(classJy.getClassIdx() + " | " + classJy.getClassName() + " | "
+                    + classJy.getSeconds() + " | " + classJy.getLectureCnt() + " | " + classJy.getPrice() + " | "
+                    + classJy.getStudentCnt() + " | " + classJy.getDifficulty());
+        }
+        System.out.println("\n**************************************************\n");
+    }
+
+
+    // 수업 수정
+    public static void updateClass() throws Exception {
+        System.out.println("**************************************************\n");
+        System.out.println("몇 번째 수업을 수정하시겠습니까?\n");
+        System.out.println("**************************************************\n");
+        System.out.print("수업 번호 : ");
+        int classIdx = Integer.parseInt(br.readLine());
+
+        // 입력받은 classIdx이 해당 선생님의 수업 리스트에 있는지 확인
+        // 선생님의 담당 수업 리스트
+        ArrayList<Class_jy> classesList = classServiceJy.getClasses();
+        boolean inCharge = false;
+        for(Class_jy classJy: classesList){ // [리팩토링] 성능 개선을 위해 map으로 구현
+            if(classIdx == classJy.getClassIdx()){
+                inCharge = true;
+                break;
+            }
+        }
+
+        // 수업 번호 잘못 입력 시, 메인 화면으로 돌아간다.
+        if(!inCharge){
+            System.out.println("본인이 담당하고 있는 수업이 아니기 때문에 수정하실 수 없습니다.");
+            System.out.println("본인이 담당하는 수업 번호를 입력해주세요.");
+            return;
+        }
+
+        // 수업 수정 정보 입력
+        System.out.print("수업 제목 : ");
+        String className = br.readLine();
+        System.out.print("가격 : ");  // [리팩토링] 숫자 입력 예외 발생 시, 다시 입력 받기
+        int price = Integer.parseInt(br.readLine());
+        System.out.println("- 난이도는 1=쉬움 / 2=보통 / 3=어려움 입니다. -");
+        System.out.print("난이도 : "); // [리팩토링] 1-3 예외 발생 시, 다시 입력 받기
+        int difficulty = Integer.parseInt(br.readLine());
+
+        // 수업 수정
+        classServiceJy.updateClass(classIdx, className, price, difficulty);
+
+        System.out.println("\n수정을 완료하였습니다.");
+        System.out.println("**************************************************\n");
+    }
+
+    // 수업 삭제
+    public static void deleteClass() throws Exception {
+        System.out.println("**************************************************\n");
+        System.out.println("몇 번째 수업을 삭제하시겠습니까?\n");
+        System.out.println("**************************************************\n");
+        System.out.print("수업 번호 : ");
+        int classIdx = Integer.parseInt(br.readLine());
+
+        // 입력받은 classIdx이 해당 선생님의 수업 리스트에 있는지 확인
+        // 선생님의 담당 수업 리스트
+        ArrayList<Class_jy> classesList = classServiceJy.getClasses();
+        boolean inCharge = false;
+        for(Class_jy classJy: classesList){ // [리팩토링] 성능 개선을 위해 map으로 구현
+            if(classIdx == classJy.getClassIdx()){
+                inCharge = true;
+                break;
+            }
+        }
+
+        // 수업 번호 잘못 입력 시, 메인 화면으로 돌아간다.
+        if(!inCharge){
+            System.out.println("본인이 담당하고 있는 수업이 아니기 때문에 수정하실 수 없습니다.");
+            System.out.println("본인이 담당하는 수업 번호를 입력해주세요.");
+            return;
+        }
+
+        // 수업 수정 정보 입력
+        System.out.print("수업 제목 : ");
+        String className = br.readLine();
+        System.out.print("가격 : ");  // [리팩토링] 숫자 입력 예외 발생 시, 다시 입력 받기
+        int price = Integer.parseInt(br.readLine());
+        System.out.println("- 난이도는 1=쉬움 / 2=보통 / 3=어려움 입니다. -");
+        System.out.print("난이도 : "); // [리팩토링] 1-3 예외 발생 시, 다시 입력 받기
+        int difficulty = Integer.parseInt(br.readLine());
+
+        // 수업 수정
+        classServiceJy.updateClass(classIdx, className, price, difficulty);
+
+        System.out.println("\n수정을 완료하였습니다.");
+        System.out.println("**************************************************\n");
+    }
 
     
     // jh
@@ -121,7 +222,7 @@ public class HuruTMain {
                 case 1:
                     System.out.println("[ 수업 관리 ]");
                     // 담당 수업 목록 출력
-                    classServiceJy.getClasses(teacherJy);
+                    getClasses();
 
                     // 수업 관리 서브 메뉴 inputByTeacherClassManage
                     System.out.println("1. 수업 등록하기 2. 수업 수정하기 3. 수업 삭제하기 4. 질문 보러 가기");
@@ -130,9 +231,9 @@ public class HuruTMain {
                     if(inputByTeacherClassManage == 1){ // 1. 수업 등록하기
                         insertClass();
                     }else if(inputByTeacherClassManage == 2){ // 2. 수업 수정하기
-                        
+                        updateClass();
                     }else if(inputByTeacherClassManage == 3){ // 3. 수업 삭제하기
-
+                        deleteClass();
                     }else if(inputByTeacherClassManage == 4){ // 4. 질문 보러 가기
 
                     }else{

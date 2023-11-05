@@ -1,11 +1,13 @@
 package service;
 
 import dao.ClassDAO_jy;
+import dto.Class_jy;
 import dto.Teacher_jy;
 import main.HuruTMain;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class ClassService_jy {
     ClassDAO_jy classDAOJy;
@@ -27,26 +29,16 @@ public class ClassService_jy {
         classDAOJy.insertClass(className, teacherJy.getTeacherIdx(), price, difficulty);
     }
 
-    // 수업 조회: 본인이 담당하는 수업으로 제한
-    public void getClasses(Teacher_jy teacherJy) throws Exception {
-
+    // 담당 수업 모두 조회
+    public ArrayList<Class_jy> getClasses() throws Exception {
+        ArrayList<Class_jy> classesList = classDAOJy.getClasses(teacherJy.getTeacherIdx());
+        return classesList;
     }
 
     // 수업 수정
-    public void updateClass (Teacher_jy teacherJy) throws Exception {
-        /*
-        System.out.println("**************************************************\n");
-        System.out.println("수정할 수업의 번호를 입력해 주세요.");
-        System.out.println("**************************************************\n");
-        // 수업 번호 입력
-        System.out.print("수업 번호 : ");
-        int classIdx = Integer.parseInt(br.readLine());
-
-        // 입력받은 수업 번호가 선생님이 담당하고 있는 수업이 맞는지 확인
-
-        // 수업
-        classDAOJy.updateClass();
-        */
+    public void updateClass (int classIdx, String className, int price, int difficulty) throws Exception {
+        // 수업 수정
+        classDAOJy.updateClass(classIdx, className, price, difficulty, teacherJy.getTeacherIdx());
     }
 
     // 수업 삭제

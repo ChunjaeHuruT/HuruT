@@ -37,9 +37,9 @@ public class ClassDAO_jy {
 
     // 수업 조회
     // all: 담당하는 수업 전부 조회
-    public ArrayList<Class_jy> getClasses(int teacherId) {
+    public ArrayList<Class_jy> getClasses(int teacherIdx) {
         // teacherId를 인덱스로 갖는 선생님의 수업 전부
-        ArrayList<Class_jy> classesList = mapper.getClasses(teacherId);
+        ArrayList<Class_jy> classesList = mapper.getClasses(teacherIdx);
 
         return classesList;
     }
@@ -52,9 +52,9 @@ public class ClassDAO_jy {
     }
 
     // 수업 수정
-    public void updateClass(String className, int teacherId, int price, int difficulty){
+    public void updateClass(int classIdx, String className, int price, int difficulty, int teacherId){
         // 수업명, 선생님 인덱스, 가격, 난이도 수정
-        Class_jy aClassJy = new Class_jy(className, teacherId, price, difficulty);
+        Class_jy aClassJy = new Class_jy(classIdx, className, teacherId, price, difficulty);
         mapper.updateClass(aClassJy);
         session.commit();
     }

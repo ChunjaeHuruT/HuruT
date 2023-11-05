@@ -15,7 +15,7 @@
     <select id="getClasses" parameterType="int" resultType="dto.Class_jy">
         SELECT *
         FROM classes
-        where teacher_id = #{teacherId}
+        where teacher_id = #{teacherIdx}
     </select>
 
     <select id="getClass" parameterType="int" resultType="dto.Class_jy">
@@ -26,14 +26,14 @@
 
     <update id="updateClass" parameterType="dto.Class_jy">
         update classes
-        set btitle = #{btitle},
-            bcontent = #{bcontent},
-            bwriter = #{bwriter}
-        where bno = #{bno}
+        set class_name = #{className},
+            price = #{price},
+            difficulty = #{difficulty}
+        where idx = #{classIdx}
     </update>
 
     <delete id="deleteClass" parameterType="int">
         delete from classes
-        where class_idx = #{classIdx}
+        where idx = #{classIdx}
     </delete>
 </mapper>
