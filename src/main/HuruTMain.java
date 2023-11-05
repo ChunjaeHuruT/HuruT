@@ -1,5 +1,6 @@
 package main;
 
+import service.ReviewService_he;
 import service.StudentService;
 import java.util.Scanner;
 
@@ -20,6 +21,8 @@ public class HuruTMain {
 
     
     // he
+    // 아래는 강의평 등록 테스트를 위해 추가한 멤버임.
+    // static ReviewService_he reviewService_he = new ReviewService_he();
     
 
 
@@ -61,6 +64,8 @@ public class HuruTMain {
 
 
         // he
+        // 아래는 리뷰 등록을 테스트하기 위해 사용한 코드임. 1번 학생이 1번 강의에 강의평을 등록하는 상황.
+        // reviewService_he.addReview(1, 1);
 
 
         

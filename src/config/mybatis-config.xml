@@ -31,6 +31,7 @@
             
             
             <!-- he -->
+        <mapper resource="repository/mapperxml/ReviewMapper_he.xml"/>
 
             
     </mappers>
