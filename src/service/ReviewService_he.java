@@ -16,7 +16,9 @@ public class ReviewService_he {
 
     // 입력을 받는 데 사용할 버퍼드리더
     BufferedReader br;
+    // SQL Session
     SqlSession sqlSession;
+    // 사용할 매퍼
     ReviewMapper_he reviewMapper_he;
 
 
