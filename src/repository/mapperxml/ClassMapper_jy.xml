@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 인터페이스 연결 -->
+<!-- mapper namespace = "package명.인터페이스명" -->
+<mapper namespace="repository.mapper.ClassMapper_jy">
+    <!-- 해당 sql을 인터페이스에 선언된 메서드와 연결해서 처리.
+    id는 메서드명, resultType 리턴 타입(풀 패키지명), parameterType 매개변수 -->
+    <insert id="insertClass" parameterType="dto.Class_jy">
+        INSERT INTO classes(class_name, teacher_id, price, rating, difficulty)
+        values (#{className}, #{teacherId}, #{price}, 0, difficulty)
+    </insert>
+
+    <select id="getClasses" parameterType="int" resultType="dto.Class_jy">
+        SELECT *
+        FROM classes
+        where teacher_id = #{teacherId}
+    </select>
+
+    <select id="getClass" parameterType="int" resultType="dto.Class_jy">
+        SELECT *
+        FROM classes
+        where classIdx = #{classIdx}
+    </select>
+
+    <update id="updateClass" parameterType="dto.Class_jy">
+        update classes
+        set btitle = #{btitle},
+            bcontent = #{bcontent},
+            bwriter = #{bwriter}
+        where bno = #{bno}
+    </update>
+
+    <delete id="deleteClass" parameterType="int">
+        delete from classes
+        where class_idx = #{classIdx}
+    </delete>
+</mapper>

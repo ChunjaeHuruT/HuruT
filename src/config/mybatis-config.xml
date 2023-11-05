@@ -19,7 +19,7 @@
     </environments>
     <mappers>
             <!-- jy -->
-
+        <mapper resource="repository/mapperxml/ClassMapper_jy.xml"/>
             
             <!-- jh -->
             

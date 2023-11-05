@@ -1,9 +1,12 @@
-package dao;
+package dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import java.time.LocalDateTime;
 
-public class TeacherDAO {
-
+@AllArgsConstructor
+@Data
+public class Teacher_jy {
     private int teacherIdx;
     private String teacherEmail;
     private String teacherName;
@@ -11,4 +14,5 @@ public class TeacherDAO {
     private LocalDateTime teacherJoined;
     private int teacherPoints;
     private int classCnt;
+
 }

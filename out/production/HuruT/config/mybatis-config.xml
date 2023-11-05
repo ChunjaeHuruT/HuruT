@@ -18,7 +18,20 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="repository/mapperxml/StudentMapper.xml" />
-        <mapper resource="repository/mapperxml/StudentMapper.xml" />
+            <!-- jy -->
+        <mapper resource="repository/mapperxml/ClassMapper_jy.xml"/>
+            
+            <!-- jh -->
+            
+            
+            <!-- sz -->
+            
+            
+            <!-- ys -->
+            
+            
+            <!-- he -->
+
+            
     </mappers>
 </configuration>
