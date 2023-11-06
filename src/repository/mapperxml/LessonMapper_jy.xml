@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 인터페이스 연결 -->
+<!-- mapper namespace = "package명.인터페이스명" -->
+<mapper namespace="repository.mapper.LessonMapper_jy">
+    <!-- 해당 sql을 인터페이스에 선언된 메서드와 연결해서 처리.
+    id는 메서드명, resultType 리턴 타입(풀 패키지명), parameterType 매개변수 -->
+    <!--
+    lesson_idx					    INT					Primary key auto_increment,
+    lesson_name				varchar(100)		NOT NULL,
+    class_id				INT					NOT NULL,
+    lessons_seconds			INT					NOT NULL,
+    -->
+
+    <insert id="insertLesson" parameterType="dto.Lesson_jy">
+        INSERT INTO lessons (lesson_name, class_id, lessons_seconds)
+        values (#{lessonName}, #{classId}, #{lessonsSeconds})
+    </insert>
+
+    <select id="getLessons" parameterType="int" resultType="dto.Lesson_jy">
+        SELECT *
+        FROM lessons
+        where class_id = #{classId}
+    </select>
+
+    <select id="getLesson" parameterType="int" resultType="dto.Lesson_jy">
+        SELECT *
+        FROM lessons
+        where lesson_idx = #{lessonIdx}
+    </select>
+
+    <update id="updateLesson" parameterType="dto.Lesson_jy">
+        update lessons
+        set lesson_name = #{lessonName},
+            lessons_seconds = #{lessonsSeconds}
+        where lesson_idx = #{lessonIdx}
+    </update>
+
+    <delete id="deleteLesson" parameterType="int">
+        delete from lessons
+        where lesson_idx = #{lessonIdx}
+    </delete>
+</mapper>

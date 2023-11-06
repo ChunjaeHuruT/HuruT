@@ -1,15 +1,13 @@
 package main;
 
 import dto.Class_jy;
+import dto.Lesson_jy;
 import dto.Question_jy;
 import dto.Teacher_jy;
 import factory.MyBatisMapperFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import service.ClassService_jy;
-import service.QuestionService_jy;
-import service.StudentService;
-import service.TeacherService_jy;
+import service.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,6 +26,8 @@ public class HuruTMain {
     static ClassService_jy classServiceJy;
     // 질문 관련 서비스 객체 (질문 조회)
     static QuestionService_jy questionServiceJy;
+    // 학습 관련 서비스 객체
+    static LessonService_jy lessonServiceJY;
     // 로그인된 선생님 객체. 로그인 전에는 null
     private static Teacher_jy teacherJy = null;
     public static Teacher_jy getTeacherJy(){
@@ -202,12 +202,24 @@ public class HuruTMain {
         System.out.println("\n**************************************************\n");
     }
 
-    // 특정 class의 모든 lesson을 화면에 출력
+    // 특정 class의 모든 lessons을 화면에 출력
     public static void getLessons(int inputByTeacherLessonManage_classIdx) throws Exception {
-        // [ {선생님_이름} 선생님의 {수업제목}의 학습 리스트 ]
-        //학습번호 | 학습제목 | 학습시간
+        // classIdx를 통해 class 객체를 하나 가져옴
         Class_jy aClass = classServiceJy.getClass(inputByTeacherLessonManage_classIdx);
-        System.out.println(teacherJy.getTeacherName()+" 선생님의 ");
+        System.out.println(teacherJy.getTeacherName()+" 선생님의 ["+aClass.getClassName()+"]의 학습 리스트");
+
+        // 특정 class의 lessons을 불러옴
+        ArrayList<Lesson_jy> lessonsList = lessonServiceJY.getLessons(inputByTeacherLessonManage_classIdx);
+
+        // lessons 출력
+        System.out.println("\n**************************************************\n");
+        System.out.println("학습번호 | 학습제목 | 학습시간(분)\n");
+        for(Lesson_jy lesson: lessonsList){
+            int minutes = lesson.getLessonsSeconds()/60;
+
+            System.out.println(lesson.getLessonIdx() +" | "+ lesson.getLessonName() + " | "+ minutes);
+        }
+        System.out.println("\n**************************************************\n");
     }
     
     // jh
@@ -250,6 +262,8 @@ public class HuruTMain {
         classServiceJy = new ClassService_jy();
         // 질문 관련 서비스 객체
         questionServiceJy = new QuestionService_jy();
+        // 학습 관련 서비스 객체
+        lessonServiceJY = new LessonService_jy();
         // 로그인 상태 여부
         boolean logIn = true;
 
@@ -290,12 +304,12 @@ public class HuruTMain {
                     break;
                 // 2. 학습 관리
                 case 2:
-                    /*
                     System.out.println("[ 학습 관리 ]");
                     // 담당 수업 목록 출력
                     getClasses();
 
-                    System.out.print("\n몇 번째 수업의 학습을 관리하시겠습니까? : "); // inputByTeacherLessonManage_classIdx
+                    System.out.print("\n몇 번째 수업의 학습을 관리하시겠습니까?");
+                    System.out.print("수업 번호 : "); // inputByTeacherLessonManage_classIdx
                     int inputByTeacherLessonManage_classIdx = Integer.parseInt(br.readLine());
 
                     // 본인 수업 맞는지 확인
@@ -320,7 +334,7 @@ public class HuruTMain {
                     getLessons(inputByTeacherLessonManage_classIdx);
 
                     // 1.학습 등록하기 2.학습 수정하기 3.학습 삭제하기
-                    System.out.println("1.학습 등록 2.학습 수정 3.학습 삭제"); // inputByTeacherLessonManage_menu
+                    System.out.println("1.학습 등록 2.학습 수정 3.학습 삭제 4. 메인으로 돌아가기"); // inputByTeacherLessonManage_menu
                     int inputByTeacherLessonManage_menu = Integer.parseInt(br.readLine());
 
                     if(inputByTeacherLessonManage_menu == 1){
@@ -329,9 +343,12 @@ public class HuruTMain {
 
                     }else if(inputByTeacherLessonManage_menu == 3){
 
-                    }
-                    */
+                    }else if(inputByTeacherLessonManage_menu == 4){
 
+                    }else{
+                        System.out.println("잘못 입력하셨습니다.");
+                        System.out.println("메인으로 돌아갑니다.");
+                    }
                     //classServiceJy.updateClass(teacherJy);
                     break;
                 // 3. 마이페이지
