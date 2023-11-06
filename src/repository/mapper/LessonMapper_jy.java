@@ -11,4 +11,5 @@ public interface LessonMapper_jy {
     public Lesson_jy getLesson (int lessonIdx);
     public void updateLesson (Lesson_jy lessonJy);
     public void deleteLesson (int lessonIdx);
+    public Integer getClassIdx(int lessonIdx);
 }

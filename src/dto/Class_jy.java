@@ -16,6 +16,12 @@ public class Class_jy {
     private int seconds;
     private int difficulty;
 
+    public Class_jy(int classIdx, int lectureCnt, int seconds){
+        this.classIdx = classIdx;
+        this.lectureCnt = lectureCnt;
+        this.seconds = seconds;
+    }
+
     public Class_jy(String className, int teacherId, int price, int difficulty){
         this.className = className;
         this.teacherId = teacherId;

@@ -7,6 +7,7 @@ import repository.mapper.ClassMapper_jy;
 import repository.mapper.LessonMapper_jy;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LessonDAO_jy {
     /*
@@ -35,8 +36,8 @@ public class LessonDAO_jy {
 
     // 학습 조회
     // all: 특정 수업의 모든 학습 조회
-    public ArrayList<Lesson_jy> getLessons (int classIdx) {
-        ArrayList<Lesson_jy> lessonsList = mapper.getLessons(classIdx);
+    public ArrayList<Lesson_jy> getLessons (int classId) {
+        ArrayList<Lesson_jy> lessonsList = mapper.getLessons(classId);
 
         return lessonsList;
     }
@@ -60,5 +61,16 @@ public class LessonDAO_jy {
     public void deleteLesson (int lessonIdx){
         mapper.deleteLesson(lessonIdx);
         session.commit();
+    }
+
+    // 학습의 수업 인덱스 조회
+    public int getClassIdx(int lessonIdx){
+        Integer classIdx = mapper.getClassIdx(lessonIdx);
+
+        if(Objects.isNull(classIdx)){ // lessonIdx인 학습lesson을 가진 수업class가 존재하지 않는다.
+            return -1;
+        }else{
+            return classIdx.intValue(); // lessonIdx인 학습lesson을 가진 수업class의 classIdx 리턴
+        }
     }
 }

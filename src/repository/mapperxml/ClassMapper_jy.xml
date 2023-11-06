@@ -24,6 +24,13 @@
         where class_idx = #{classIdx}
     </select>
 
+    <update id="updateClassByLesson" parameterType="dto.Class_jy">
+        update classes
+        set lecture_cnt = #{lectureCnt},
+            seconds = #{seconds}
+        where class_idx = #{classIdx}
+    </update>
+
     <update id="updateClass" parameterType="dto.Class_jy">
         update classes
         set class_name = #{className},

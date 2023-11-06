@@ -202,24 +202,71 @@ public class HuruTMain {
         System.out.println("\n**************************************************\n");
     }
 
+    // 학습 조회: ALL
     // 특정 class의 모든 lessons을 화면에 출력
     public static void getLessons(int inputByTeacherLessonManage_classIdx) throws Exception {
         // classIdx를 통해 class 객체를 하나 가져옴
         Class_jy aClass = classServiceJy.getClass(inputByTeacherLessonManage_classIdx);
-        System.out.println(teacherJy.getTeacherName()+" 선생님의 ["+aClass.getClassName()+"]의 학습 리스트");
+        System.out.println("\n" + teacherJy.getTeacherName()+" 선생님의 ["+aClass.getClassName()+"] 학습 리스트\n");
 
         // 특정 class의 lessons을 불러옴
         ArrayList<Lesson_jy> lessonsList = lessonServiceJY.getLessons(inputByTeacherLessonManage_classIdx);
 
         // lessons 출력
-        System.out.println("\n**************************************************\n");
         System.out.println("학습번호 | 학습제목 | 학습시간(분)\n");
         for(Lesson_jy lesson: lessonsList){
             int minutes = lesson.getLessonsSeconds()/60;
 
-            System.out.println(lesson.getLessonIdx() +" | "+ lesson.getLessonName() + " | "+ minutes);
+            System.out.println(lesson.getLessonIdx() +" | "+ lesson.getLessonName() + " | "+ minutes+"분");
         }
         System.out.println("\n**************************************************\n");
+    }
+
+    // 학습 등록
+    // 선생님으로부터 lesson 정보 입력 받은 후, classIdx의 class에 등록
+    public static void insertLesson(int classIdx) throws Exception{
+        System.out.println("**************************************************\n");
+        System.out.print("학습 제목 : ");
+        String lessonName = br.readLine();
+        System.out.print("학습 시간 (분) : ");
+        int lessonsMinutes = Integer.parseInt(br.readLine());   // 선생님한테 분 단위로 입력 받음
+        int lessonsSeconds = lessonsMinutes * 60;               // DB에 삽입 시, 초 단위로 삽입
+        // 학습 등록
+        lessonServiceJY.insertLesson(lessonName, classIdx, lessonsSeconds);
+        // 수업 객체 불러오기
+        Class_jy aClass = classServiceJy.getClass(classIdx);
+        // 수업 갱신: 학습 개수, 수업 총 시간
+        // 학습 개수 += 1
+        // 수업 총 시간 += 학습 시간
+        classServiceJy.updateClassByLesson(classIdx, aClass.getLectureCnt() + 1,aClass.getSeconds() + lessonsSeconds);
+
+        System.out.println("\n등록을 완료하였습니다.");
+        System.out.println("**************************************************\n");
+    }
+
+    // 학습 삭제
+    public static void deleteLesson(int classIdx) throws Exception{
+        System.out.println("**************************************************\n");
+        System.out.println("삭제할 학습 번호를 입력해 주세요.");
+        System.out.println("학습 번호 : ");
+        int lessonIdx = Integer.parseInt(br.readLine());
+
+        // 해당 수업의 학습이 맞는지 확인
+        int validateClassIdx = 0;
+        // validateClassIdx = lessonIdx 학습을 가진 수업 인덱스
+        validateClassIdx = lessonServiceJY.getClassIdx(lessonIdx);
+        // 삭제하려는 학습이 현재 수업에 없을 경우
+        // 삭제하려는 학습이 데이터베이스에 존재하지 않을 경우
+        if(validateClassIdx != classIdx){
+            System.out.println("학습 번호를 잘못 입력하였습니다.");
+            return;
+        }
+
+        // 학습 삭제
+        lessonServiceJY.deleteLesson(lessonIdx);
+
+        System.out.println("\n삭제를 완료하였습니다.");
+        System.out.println("**************************************************\n");
     }
     
     // jh
@@ -271,7 +318,7 @@ public class HuruTMain {
             // inputByTeacherInWelcome
             System.out.println("**************************************************\n");
             System.out.println("이용할 메뉴를 선택해 주세요.");
-            System.out.println("\n1. 수업 관리 2. 학습 관리 3. 마이페이지 4. 로그아웃");
+            System.out.println("\n1. 수업 관리 2. 학습 관리 3. 로그아웃");
             System.out.print("메뉴 : ");
             int inputByTeacherInWelcome = Integer.parseInt(br.readLine());
             System.out.println("**************************************************\n");
@@ -308,7 +355,7 @@ public class HuruTMain {
                     // 담당 수업 목록 출력
                     getClasses();
 
-                    System.out.print("\n몇 번째 수업의 학습을 관리하시겠습니까?");
+                    System.out.println("\n몇 번째 수업의 학습을 관리하시겠습니까?");
                     System.out.print("수업 번호 : "); // inputByTeacherLessonManage_classIdx
                     int inputByTeacherLessonManage_classIdx = Integer.parseInt(br.readLine());
 
@@ -334,29 +381,22 @@ public class HuruTMain {
                     getLessons(inputByTeacherLessonManage_classIdx);
 
                     // 1.학습 등록하기 2.학습 수정하기 3.학습 삭제하기
-                    System.out.println("1.학습 등록 2.학습 수정 3.학습 삭제 4. 메인으로 돌아가기"); // inputByTeacherLessonManage_menu
+                    System.out.println("1.학습 등록 2.학습 삭제 3. 메인으로 돌아가기"); // inputByTeacherLessonManage_menu
                     int inputByTeacherLessonManage_menu = Integer.parseInt(br.readLine());
 
-                    if(inputByTeacherLessonManage_menu == 1){
-
-                    }else if(inputByTeacherLessonManage_menu == 2){
-
-                    }else if(inputByTeacherLessonManage_menu == 3){
-
-                    }else if(inputByTeacherLessonManage_menu == 4){
-
-                    }else{
+                    if(inputByTeacherLessonManage_menu == 1){ // 1. 학습 등록
+                        insertLesson(inputByTeacherLessonManage_classIdx);
+                    }else if(inputByTeacherLessonManage_menu == 2){ // 2. 학습 삭제
+                        deleteLesson(inputByTeacherLessonManage_classIdx);
+                    }else if(inputByTeacherLessonManage_menu == 3){ // 3. 메인으로 돌아가기
+                        // 메인으로 돌아간다.
+                    }else{  // 예외
                         System.out.println("잘못 입력하셨습니다.");
                         System.out.println("메인으로 돌아갑니다.");
                     }
-                    //classServiceJy.updateClass(teacherJy);
                     break;
-                // 3. 마이페이지
+                // 3. 로그아웃
                 case 3:
-
-                    break;
-                // 4. 로그아웃
-                case 4:
                     logIn = false;
                     break;
                 // 입력 예외

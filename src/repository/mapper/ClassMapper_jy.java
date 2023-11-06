@@ -10,4 +10,5 @@ public interface ClassMapper_jy {
     public Class_jy getClass (int classIdx);
     public void updateClass (Class_jy aClassJy);
     public void deleteClass (int classIdx);
+    public void updateClassByLesson(Class_jy aClassJy);
 }

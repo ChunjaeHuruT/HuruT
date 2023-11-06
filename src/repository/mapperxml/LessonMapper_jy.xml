@@ -42,4 +42,10 @@
         delete from lessons
         where lesson_idx = #{lessonIdx}
     </delete>
+
+    <select id="getClassIdx" parameterType="Integer" resultType="int">
+        SELECT class_id
+        FROM lessons
+        where lesson_idx = #{lessonIdx}
+    </select>
 </mapper>

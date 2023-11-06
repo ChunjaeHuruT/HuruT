@@ -13,13 +13,11 @@ import java.util.ArrayList;
 public class LessonService_jy {
     LessonDAO_jy lessonDAOJy;
     BufferedReader br;
-    Teacher_jy teacherJy;
 
     // 생성자
     public LessonService_jy(){
         lessonDAOJy = new LessonDAO_jy();
         br = new BufferedReader(new InputStreamReader(System.in));
-        teacherJy = HuruTMain.getTeacherJy();
     }
 
     // 학습 생성
@@ -29,10 +27,20 @@ public class LessonService_jy {
 
     // 학습 조회
     // classIdx 수업의 학습 전체 리턴
-    public ArrayList<Lesson_jy> getLessons(int classIdx){
-        ArrayList<Lesson_jy> lessonsList = lessonDAOJy.getLessons(classIdx);
+    public ArrayList<Lesson_jy> getLessons(int classId) {
+        ArrayList<Lesson_jy> lessonsList = lessonDAOJy.getLessons(classId);
         return lessonsList;
     }
 
+    // 학습 삭제
+    public void deleteLesson(int lessonIdx){
+        lessonDAOJy.deleteLesson(lessonIdx);
+    }
 
+    // 학습의 수업 idx 조회
+    // lessonIdx를 가진 classIdx 리턴
+    public int getClassIdx(int lessonIdx){
+        int classIdx = lessonDAOJy.getClassIdx(lessonIdx);
+        return classIdx;
+    }
 }

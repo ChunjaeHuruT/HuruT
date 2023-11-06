@@ -59,6 +59,14 @@ public class ClassDAO_jy {
         session.commit();
     }
 
+    // 수업 수정: 학습 개수, 학습 총 시간
+    // 학습이 새로 등록되었을 때, 수업이 수정된다.
+    public void updateClassByLesson(int classIdx, int lectureCnt, int seconds){
+        Class_jy aClassJy = new Class_jy(classIdx, lectureCnt, seconds);
+        mapper.updateClassByLesson(aClassJy);
+        session.commit();
+    }
+
     // 수업 삭제
     public void deleteClass(int classIdx){
         mapper.deleteClass(classIdx);
