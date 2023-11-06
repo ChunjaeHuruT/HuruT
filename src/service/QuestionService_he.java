@@ -29,7 +29,8 @@ public class QuestionService_he {
 
 
     // 질문 등록
-    // 받아와야 하는 매개변수: 로그인 중인 학생의 idx, 질문 등록 대상인 수업의 idx
+    // 사용하는 전역변수: 로그인
+    // 받아와야 하는 매개변수: 질문 등록 대상인 수업의 idx
     public void addQuestion (int studentIdx, int classIdx) {
         String
     }
