@@ -1,46 +1,54 @@
 package service;
 
-import dao.ClassDAO_jy;
-import dao.LessonDAO_jy;
 import dto.Lesson_jy;
-import dto.Teacher_jy;
-import main.HuruTMain;
+import org.apache.ibatis.session.SqlSession;
+import repository.mapper.LessonMapper_jy;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LessonService_jy {
-    LessonDAO_jy lessonDAOJy;
-    BufferedReader br;
+    // DAO
+    SqlSession sqlSession;
+    LessonMapper_jy mapper;
+
 
     // 생성자
     public LessonService_jy(){
-        lessonDAOJy = new LessonDAO_jy();
-        br = new BufferedReader(new InputStreamReader(System.in));
+        this.sqlSession = factory.MyBatisMapperFactory.getSqlSession();
+        mapper = sqlSession.getMapper(LessonMapper_jy.class);
     }
 
     // 학습 생성
     public void insertLesson (String lessonName, int classId, int lessonsSeconds){
-        lessonDAOJy.insertLesson(lessonName, classId, lessonsSeconds);
+        Lesson_jy lessonJy = new Lesson_jy(lessonName, classId, lessonsSeconds);
+        mapper.insertLesson(lessonJy);
+        sqlSession.commit();
     }
 
     // 학습 조회
     // classIdx 수업의 학습 전체 리턴
-    public ArrayList<Lesson_jy> getLessons(int classId) {
-        ArrayList<Lesson_jy> lessonsList = lessonDAOJy.getLessons(classId);
+    public ArrayList<Lesson_jy> getLessons (int classId) {
+        ArrayList<Lesson_jy> lessonsList = mapper.getLessons(classId);
+
         return lessonsList;
     }
 
     // 학습 삭제
     public void deleteLesson(int lessonIdx){
-        lessonDAOJy.deleteLesson(lessonIdx);
+        mapper.deleteLesson(lessonIdx);
+        sqlSession.commit();
     }
 
     // 학습의 수업 idx 조회
     // lessonIdx를 가진 classIdx 리턴
     public int getClassIdx(int lessonIdx){
-        int classIdx = lessonDAOJy.getClassIdx(lessonIdx);
-        return classIdx;
+        Integer classIdx = mapper.getClassIdx(lessonIdx);
+
+        if(Objects.isNull(classIdx)){ // lessonIdx인 학습lesson을 가진 수업class가 존재하지 않는다.
+            return -1;
+        }else{
+            return classIdx.intValue(); // lessonIdx인 학습lesson을 가진 수업class의 classIdx 리턴
+        }
     }
 }

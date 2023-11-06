@@ -1,6 +1,5 @@
 package repository.mapper;
 
-import dto.Class_jy;
 import dto.Lesson_jy;
 
 import java.util.ArrayList;

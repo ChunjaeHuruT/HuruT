@@ -20,8 +20,7 @@ public class HuruTMain {
     // 필요한 서비스를 멤버로 받아오기
 
     // jy
-    // 선생님 관련 서비스 객체 (수업 관리, 학습 관리, 마이페이지, 로그아웃)
-    static TeacherService_jy teacherServiceJy;
+
     // 수업 관련 서비스 객체 (수업 등록/삭제/수정, 질문 보러 가기)
     static ClassService_jy classServiceJy;
     // 질문 관련 서비스 객체 (질문 조회)
@@ -196,6 +195,7 @@ public class HuruTMain {
         System.out.println("질문 제목 | 질문 내용 | 작성자 | 질문 작성일자"); // [리팩토링] 강의 이름이 들어가야 할 것 같음
         for(Question_jy question: questionsList){
             // [리팩토링] question.getStudentId()  ->  studentDAO 에서 getName(studentIdx)로 바꾸기
+            // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             System.out.println(question.getTitle()+" | "+question.getContents()+" | "+question.getStudentId()+" | "+question.getQuestionDate());
         }
 
@@ -303,8 +303,6 @@ public class HuruTMain {
         System.out.println(teacherJy.getTeacherName()+" 선생님 반갑습니다.\n");
         System.out.println("**************************************************\n");
 
-        // 선생님 관련 서비스 객체
-        teacherServiceJy = new TeacherService_jy();
         // 수업 관련 서비스 객체
         classServiceJy = new ClassService_jy();
         // 질문 관련 서비스 객체

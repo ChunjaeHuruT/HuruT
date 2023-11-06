@@ -1,31 +1,26 @@
 package service;
 
-import dao.ClassDAO_jy;
-import dao.QuestionDAO_jy;
 import dto.Question_jy;
-import dto.Teacher_jy;
-import main.HuruTMain;
+import org.apache.ibatis.session.SqlSession;
+import repository.mapper.QuestionMapper_jy;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class QuestionService_jy {
-    ClassDAO_jy classDAOJy;
-    BufferedReader br;
-    Teacher_jy teacherJy;
-    QuestionDAO_jy questionDAOJy;
+    // DAO
+    SqlSession session;
+    QuestionMapper_jy mapper;
 
     // 생성자
     public QuestionService_jy(){
-        questionDAOJy = new QuestionDAO_jy();
-        br = new BufferedReader(new InputStreamReader(System.in));
-        teacherJy = HuruTMain.getTeacherJy();
+        this.session = factory.MyBatisMapperFactory.getSqlSession();
+        mapper = session.getMapper(QuestionMapper_jy.class);
     }
 
-    // 질문 검색: 특정 수업에(classIdx) 관한 질문만
+    // 질문 조회: 특정 수업에(classIdx) 관한 질문만
     public ArrayList<Question_jy> getQuestions(int classIdx){
-        ArrayList<Question_jy> questionsList = questionDAOJy.getQuestions(classIdx);
+        // classIdx를 인덱스로 갖는 질문 전부
+        ArrayList<Question_jy> questionsList = mapper.getQuestions(classIdx);
 
         return questionsList;
     }
