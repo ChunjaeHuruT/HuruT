@@ -100,7 +100,7 @@ public class HuruTMain_ys {
         // 로그인 화면
         loginView();
         // 사용자 입력값
-        System.out.print("아이디(이메일형식): ");
+        System.out.print("아이디: ");
         String studentEmail = br.readLine();
         System.out.print("비밀번호: ");
         String studentPassword = br.readLine();
@@ -134,7 +134,7 @@ public class HuruTMain_ys {
         // 로그인 화면 출력
         loginView();
         // 사용자 입력값
-        System.out.print("아이디(이메일형식): ");
+        System.out.print("아이디: ");
         String teacherEmail = br.readLine();
         System.out.print("비밀번호: ");
         String teacherPassword = br.readLine();
@@ -169,7 +169,7 @@ public class HuruTMain_ys {
         // 회원가입 화면 출력
         signUpView();
         // 사용자 입력값
-        System.out.print("아이디(이메일형식): ");
+        System.out.print("아이디: ");
         String studentEmail = br.readLine();
         // 아이디 중복 확인. 중복 시 회원가입 재실행
         if(signUpService_ys.studentEmailDuplicationCheck(studentEmail) == 1) {
@@ -202,7 +202,7 @@ public class HuruTMain_ys {
         // 회원가입 화면 출력
         signUpView();
         // 사용자 입력값
-        System.out.print("아이디(이메일형식): ");
+        System.out.print("아이디: ");
         String teacherEmail = br.readLine();
         // 아이디 중복 확인. 중복 시 회원가입 재실행
         if(signUpService_ys.teacherEmailDuplicationCheck(teacherEmail) == 1) {
