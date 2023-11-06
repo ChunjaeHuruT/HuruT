@@ -20,7 +20,7 @@
     <mappers>
             <!-- jy -->
         <mapper resource="repository/mapperxml/ClassMapper_jy.xml"/>
-            
+        <mapper resource="repository/mapperxml/QuestionMapper_jy.xml"/>
             <!-- jh -->
             
             

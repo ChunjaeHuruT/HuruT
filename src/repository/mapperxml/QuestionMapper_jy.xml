@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 인터페이스 연결 -->
+<!-- mapper namespace = "package명.인터페이스명" -->
+<mapper namespace="repository.mapper.QuestionMapper_jy">
+    <!-- 해당 sql을 인터페이스에 선언된 메서드와 연결해서 처리.
+    id는 메서드명, resultType 리턴 타입(풀 패키지명), parameterType 매개변수 -->
+    <select id="getQuestions" parameterType="int" resultType="dto.Question_jy">
+        SELECT *
+        FROM questions
+        where class_id = #{classIdx}
+    </select>
+</mapper>

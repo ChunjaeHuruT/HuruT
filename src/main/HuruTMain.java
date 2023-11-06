@@ -1,11 +1,13 @@
 package main;
 
 import dto.Class_jy;
+import dto.Question_jy;
 import dto.Teacher_jy;
 import factory.MyBatisMapperFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import service.ClassService_jy;
+import service.QuestionService_jy;
 import service.StudentService;
 import service.TeacherService_jy;
 
@@ -24,6 +26,8 @@ public class HuruTMain {
     static TeacherService_jy teacherServiceJy;
     // 수업 관련 서비스 객체 (수업 등록/삭제/수정, 질문 보러 가기)
     static ClassService_jy classServiceJy;
+    // 질문 관련 서비스 객체 (질문 조회)
+    static QuestionService_jy questionServiceJy;
     // 로그인된 선생님 객체. 로그인 전에는 null
     private static Teacher_jy teacherJy = null;
     public static Teacher_jy getTeacherJy(){
@@ -106,7 +110,7 @@ public class HuruTMain {
         // 수업 번호 잘못 입력 시, 메인 화면으로 돌아간다.
         if(!inCharge){
             System.out.println("본인이 담당하고 있는 수업이 아니기 때문에 수정하실 수 없습니다.");
-            System.out.println("본인이 담당하는 수업 번호를 입력해주세요.");
+            System.out.println("본인이 담당하는 수업 번호를 입력해 주세요.");
             return;
         }
 
@@ -148,7 +152,7 @@ public class HuruTMain {
         // 수업 번호 잘못 입력 시, 메인 화면으로 돌아간다.
         if(!inCharge){
             System.out.println("본인이 담당하고 있는 수업이 아니기 때문에 삭제하실 수 없습니다.");
-            System.out.println("본인이 담당하는 수업 번호를 입력해주세요.");
+            System.out.println("본인이 담당하는 수업 번호를 입력해 주세요.");
             return;
         }
 
@@ -159,6 +163,52 @@ public class HuruTMain {
         System.out.println("**************************************************\n");
     }
 
+    // 질문 검색: 담당하고 있는 수업에 관한 질문
+    public static void searchQuestions() throws Exception {
+        System.out.println("**************************************************\n");
+        System.out.println("몇 번째 수업의 질문을 보러 가시겠습니까?\n");
+        System.out.println("**************************************************\n");
+        System.out.print("수업 번호 : ");
+        int classIdx = Integer.parseInt(br.readLine());
+
+        // 입력받은 classIdx이 해당 선생님의 수업 리스트에 있는지 확인
+        // 선생님의 담당 수업 리스트
+        ArrayList<Class_jy> classesList = classServiceJy.getClasses();
+        boolean inCharge = false;
+        for(Class_jy classJy: classesList){ // [리팩토링] 성능 개선을 위해 map으로 구현
+            if(classIdx == classJy.getClassIdx()){
+                inCharge = true;
+                break;
+            }
+        }
+
+        // 수업 번호 잘못 입력 시, 메인 화면으로 돌아간다.
+        if(!inCharge){
+            System.out.println("본인이 담당하는 수업 번호를 입력해 주세요.");
+            return;
+        }
+
+        // 질문 검색
+        ArrayList<Question_jy> questionsList = questionServiceJy.getQuestions(classIdx);
+
+        // 질문 리스트 출력
+        System.out.println("\n**************************************************\n");
+        System.out.println("질문 제목 | 질문 내용 | 작성자 | 질문 작성일자"); // [리팩토링] 강의 이름이 들어가야 할 것 같음
+        for(Question_jy question: questionsList){
+            // [리팩토링] question.getStudentId()  ->  studentDAO 에서 getName(studentIdx)로 바꾸기
+            System.out.println(question.getTitle()+" | "+question.getContents()+" | "+question.getStudentId()+" | "+question.getQuestionDate());
+        }
+
+        System.out.println("\n**************************************************\n");
+    }
+
+    // 특정 class의 모든 lesson을 화면에 출력
+    public static void getLessons(int inputByTeacherLessonManage_classIdx) throws Exception {
+        // [ {선생님_이름} 선생님의 {수업제목}의 학습 리스트 ]
+        //학습번호 | 학습제목 | 학습시간
+        Class_jy aClass = classServiceJy.getClass(inputByTeacherLessonManage_classIdx);
+        System.out.println(teacherJy.getTeacherName()+" 선생님의 ");
+    }
     
     // jh
     
@@ -198,6 +248,8 @@ public class HuruTMain {
         teacherServiceJy = new TeacherService_jy();
         // 수업 관련 서비스 객체
         classServiceJy = new ClassService_jy();
+        // 질문 관련 서비스 객체
+        questionServiceJy = new QuestionService_jy();
         // 로그인 상태 여부
         boolean logIn = true;
 
@@ -229,15 +281,56 @@ public class HuruTMain {
                     }else if(inputByTeacherClassManage == 3){ // 3. 수업 삭제하기
                         deleteClass();
                     }else if(inputByTeacherClassManage == 4){ // 4. 질문 보러 가기
-
+                        searchQuestions();
                     }else if(inputByTeacherClassManage == 5){ // 5. 메인으로 돌아가기
-                        
+                        // 메인으로 돌아감
                     }else{  // 예외
                         System.out.println("잘못 입력하셨습니다.");
                     }
                     break;
                 // 2. 학습 관리
                 case 2:
+                    /*
+                    System.out.println("[ 학습 관리 ]");
+                    // 담당 수업 목록 출력
+                    getClasses();
+
+                    System.out.print("\n몇 번째 수업의 학습을 관리하시겠습니까? : "); // inputByTeacherLessonManage_classIdx
+                    int inputByTeacherLessonManage_classIdx = Integer.parseInt(br.readLine());
+
+                    // 본인 수업 맞는지 확인
+                    // 입력받은 classIdx이 해당 선생님의 수업 리스트에 있는지 확인
+                    // 선생님의 담당 수업 리스트
+                    ArrayList<Class_jy> classesList = classServiceJy.getClasses();
+                    boolean inCharge = false;
+                    for(Class_jy classJy: classesList){ // [리팩토링] 성능 개선을 위해 map으로 구현
+                        if(inputByTeacherLessonManage_classIdx == classJy.getClassIdx()){
+                            inCharge = true;
+                            break;
+                        }
+                    }
+
+                    // 수업 번호 잘못 입력 시, 메인 화면으로 돌아간다.
+                    if(!inCharge){
+                        System.out.println("본인이 담당하는 수업 번호를 입력해 주세요.");
+                        break; // 메인 메뉴로 돌아간다. switch (inputByTeacherInWelcome) 탈출
+                    }
+
+                    // 특정 수업의 학습 리스트 출력
+                    getLessons(inputByTeacherLessonManage_classIdx);
+
+                    // 1.학습 등록하기 2.학습 수정하기 3.학습 삭제하기
+                    System.out.println("1.학습 등록 2.학습 수정 3.학습 삭제"); // inputByTeacherLessonManage_menu
+                    int inputByTeacherLessonManage_menu = Integer.parseInt(br.readLine());
+
+                    if(inputByTeacherLessonManage_menu == 1){
+
+                    }else if(inputByTeacherLessonManage_menu == 2){
+
+                    }else if(inputByTeacherLessonManage_menu == 3){
+
+                    }
+                    */
 
                     //classServiceJy.updateClass(teacherJy);
                     break;
@@ -247,7 +340,7 @@ public class HuruTMain {
                     break;
                 // 4. 로그아웃
                 case 4:
-                    // logIn = false;
+                    logIn = false;
                     break;
                 // 입력 예외
                 default:
@@ -255,6 +348,7 @@ public class HuruTMain {
                     System.out.println("메뉴를 다시 입력해 주세요.");
             }
         }
+        System.out.println("로그아웃 되었습니다.");
 
         // jh
 

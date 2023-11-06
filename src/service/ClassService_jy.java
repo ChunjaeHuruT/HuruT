@@ -35,6 +35,13 @@ public class ClassService_jy {
         return classesList;
     }
 
+    // 담당 수업 하나 조회
+    // classIdx -> class 객체
+    public Class_jy getClass(int classIdx) throws Exception {
+        Class_jy aClass = classDAOJy.getClass(classIdx);
+        return aClass;
+    }
+
     // 수업 수정
     public void updateClass (int classIdx, String className, int price, int difficulty) throws Exception {
         // 수업 수정

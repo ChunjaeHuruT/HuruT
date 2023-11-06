@@ -1,9 +1,13 @@
-package dao;
+package dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-public class QuestionDAO {
-
+@Data
+@AllArgsConstructor
+public class Question_jy {
     private int questionIdx;
     private String title;
     private String contents;
