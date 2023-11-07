@@ -34,6 +34,13 @@ public class LessonService_jy {
         return lessonsList;
     }
 
+    // 학습 한 개 리턴
+    public Lesson_jy getLesson (int lessonIdx) {
+        Lesson_jy lesson = mapper.getLesson(lessonIdx);
+
+        return lesson;
+    }
+
     // 학습 삭제
     public void deleteLesson(int lessonIdx){
         mapper.deleteLesson(lessonIdx);

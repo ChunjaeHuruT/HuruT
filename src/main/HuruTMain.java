@@ -75,13 +75,26 @@ public class HuruTMain {
     public static void getClasses() throws Exception {
         System.out.println("**************************************************\n");
         System.out.println("[ "+teacherJy.getTeacherName()+" 선생님의 수업 리스트 ]");
-        System.out.println("수업 번호 | 수업 제목 | 총 수업 시간 | 학습 개수 | 가격 | 누적 수강생 | 난이도\n");
+        System.out.printf("%-5s|%-17s | %10s | %5s | %6s | %-5s\n", "수업 번호", "수업 제목", "총 수업 시간", "학습 개수", "가격", "난이도");
+
         // 담당 수업 리스트를 불러온다.
         ArrayList<Class_jy> classesList = classServiceJy.getClasses();
         for(Class_jy classJy: classesList){
-            System.out.println(classJy.getClassIdx() + " | " + classJy.getClassName() + " | "
-                    + classJy.getSeconds() + " | " + classJy.getLectureCnt() + " | " + classJy.getPrice() + " | "
-                    + classJy.getStudentCnt() + " | " + classJy.getDifficulty());
+            // 수업 시간 단위 변경: 초 -> 분
+            // DB에는 초 단위로 저장됨. 콘솔 출력은 분, 시간 단위로 출력
+            int playtime = classJy.getSeconds() / 60;
+            String playtimeStr = Integer.toString(playtime) + "분";
+
+            if(playtime / 60 >= 1){  // 60분 이상 -> 시간 단위로 변경
+                playtimeStr = Integer.toString(playtime/60).concat("시간 ");
+                if(playtime%60 != 0)    playtimeStr = playtimeStr.concat(Integer.toString(playtime%60) + "분"); // 0분이면 분은 표시하지 않음
+            }
+
+
+            // 난이도: 숫자 -> 한글
+            String difficultyStr = (classJy.getDifficulty()==1) ? "쉬움" : ((classJy.getDifficulty()==2) ? "보통" : "어려움");
+            System.out.printf("%-8s %-17s %10s %10s %12s %-5s\n", classJy.getClassIdx(), classJy.getClassName(), playtimeStr,
+                    classJy.getLectureCnt(), classJy.getPrice(), difficultyStr);
         }
         System.out.println("\n**************************************************\n");
     }
@@ -192,11 +205,11 @@ public class HuruTMain {
 
         // 질문 리스트 출력
         System.out.println("\n**************************************************\n");
-        System.out.println("질문 제목 | 질문 내용 | 작성자 | 질문 작성일자"); // [리팩토링] 강의 이름이 들어가야 할 것 같음
+        System.out.println("       질문 제목        |          질문 내용        |    작성자   | 질문 작성일자"); // [리팩토링] 강의 이름이 들어가야 할 것 같음
         for(Question_jy question: questionsList){
-            // [리팩토링] question.getStudentId()  ->  studentDAO 에서 getName(studentIdx)로 바꾸기
-            // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            System.out.println(question.getTitle()+" | "+question.getContents()+" | "+question.getStudentId()+" | "+question.getQuestionDate());
+            // 질문의 작성자 조회
+            String writer = questionServiceJy.getWriter(question.getQuestionIdx());
+            System.out.printf("%-20s %-20s %-10s %-20s\n", question.getTitle(), question.getContents(), writer, question.getQuestionDateString());
         }
 
         System.out.println("\n**************************************************\n");
@@ -213,11 +226,10 @@ public class HuruTMain {
         ArrayList<Lesson_jy> lessonsList = lessonServiceJY.getLessons(inputByTeacherLessonManage_classIdx);
 
         // lessons 출력
-        System.out.println("학습번호 | 학습제목 | 학습시간(분)\n");
+        System.out.println("학습번호 |        학습제목        | 학습시간(분)\n");
         for(Lesson_jy lesson: lessonsList){
             int minutes = lesson.getLessonsSeconds()/60;
-
-            System.out.println(lesson.getLessonIdx() +" | "+ lesson.getLessonName() + " | "+ minutes+"분");
+            System.out.printf("%-7s %-23s %-3s분\n", lesson.getLessonIdx(), lesson.getLessonName(), minutes);
         }
         System.out.println("\n**************************************************\n");
     }
@@ -248,7 +260,7 @@ public class HuruTMain {
     public static void deleteLesson(int classIdx) throws Exception{
         System.out.println("**************************************************\n");
         System.out.println("삭제할 학습 번호를 입력해 주세요.");
-        System.out.println("학습 번호 : ");
+        System.out.print("학습 번호 : ");
         int lessonIdx = Integer.parseInt(br.readLine());
 
         // 해당 수업의 학습이 맞는지 확인
@@ -262,6 +274,15 @@ public class HuruTMain {
             return;
         }
 
+        // 수업 객체 불러오기
+        Class_jy aClass = classServiceJy.getClass(classIdx);
+        // 학습 객체 불러오기
+        Lesson_jy lesson = lessonServiceJY.getLesson(lessonIdx);
+
+        // 수업 갱신: 학습 개수, 수업 총 시간
+        // 학습 개수 -= 1
+        // 수업 총 시간 -= 학습 시간
+        classServiceJy.updateClassByLesson(classIdx, aClass.getLectureCnt() - 1,aClass.getSeconds() - lesson.getLessonsSeconds());
         // 학습 삭제
         lessonServiceJY.deleteLesson(lessonIdx);
 

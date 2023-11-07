@@ -24,4 +24,10 @@ public class QuestionService_jy {
 
         return questionsList;
     }
+
+    // 질문 작성자 닉네임 조회
+    public String getWriter(int question_idx){
+        String studentNickname = mapper.getWriter(question_idx);
+        return studentNickname;
+    }
 }

@@ -12,4 +12,12 @@
         FROM questions
         where class_id = #{classIdx}
     </select>
+
+    <select id="getWriter" parameterType="int" resultType="String">
+        select s.student_nickname
+        from students s
+        join questions q
+        on s.student_idx = q.student_id
+        where q.question_idx = #{questionIdx}
+    </select>
 </mapper>
