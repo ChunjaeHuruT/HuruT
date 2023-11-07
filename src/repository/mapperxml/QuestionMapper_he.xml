@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="repository.mapper.QuestionMapper_he">
     <!-- 특정 학생이 특정 수업에 올린 질문 목록을 보여주기 위한 SELECT문 -->
-    <select id="printMyQuestions" parameterType="java.util.Map" resultType="dto.QuestionDAO_he">
+    <select id="getQuestions" parameterType="map" resultType="dao.QuestionDAO_he">
         select *
         from questions
         where class_id = #{classIdx} and student_id = #{studentIdx};
@@ -18,7 +18,7 @@
     <update id="updateQuestion" parameterType="java.util.Map">
         update questions
         set title = #{title},
-        contents = #{contents}
+        contents = #{content}
         where question_idx = #{questionIdx}
     </update>
 

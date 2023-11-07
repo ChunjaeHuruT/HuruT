@@ -9,7 +9,7 @@ import java.util.Map;
 public interface QuestionMapper_he {
 
     // 해당 학생이 해당 수업에 달았던 질문 리스트를 불러오는 메소드
-    public ArrayList<QuestionDAO_he> getQuestions_he (Map<String, Integer> map);
+    public ArrayList<QuestionDAO_he> getQuestions (Map<String, Integer> map);
 
     // 질문 하나를 테이블에 추가하는 메소드
     public void insertQuestion (QuestionDAO_he questionDAO_he);

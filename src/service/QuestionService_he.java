@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Map;
 
 // 질문 등록을 위한 서비스 클래스
@@ -54,12 +55,13 @@ public class QuestionService_he {
 
                 // 어떤 동작을 할지 선택
                 System.out.println("1.질문등록 2.질문수정 3.질문삭제 4.나가기");
-                System.out.println("원하는 작업의 번호를 입력해주세요(1~4): ");
+                System.out.print("원하는 작업의 번호를 입력해주세요(1~4): ");
                 int menuNum = Integer.parseInt(br.readLine());
 
                 // 1~3 외의 정수를 입력했을 경우를 처리
                 if (menuNum<1 || menuNum>4) {
-                    System.out.println("1~4 사이의 정수를 입력해주세요.");
+                    System.out.println("*********************************************");
+                    System.out.println("입력값이 올바르지 않습니다. 1~4 사이의 정수를 입력해주세요.");
                     continue;   // while문을 다시 실행
                 }
 
@@ -82,8 +84,10 @@ public class QuestionService_he {
                         return;
                 }
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.out.println("오류 발생. 이전 화면으로 돌아갑니다.");
+                System.out.println(e.getMessage());
                 return;
             }
         }
@@ -91,12 +95,12 @@ public class QuestionService_he {
 
     // 모든 수업의 리스트를 출력하는 메소드
     private void printMyQuestions () {
-        ArrayList<QuestionDAO_he> myQuestionList = questionMapper_he.getQuestions_he(idxMap);
+        ArrayList<QuestionDAO_he> myQuestionList = questionMapper_he.getQuestions(idxMap);
         System.out.println("*********************************************");
         System.out.println("본인이 해당 수업에 등록한 질문은 다음과 같습니다.");
         for (QuestionDAO_he q : myQuestionList) {
             System.out.println();
-            System.out.println("질문번호: " + q.getQuestionIdx() + "제목: " + q.getTitle());
+            System.out.println("질문번호: " + q.getQuestionIdx() + ", 제목: " + q.getTitle());
             System.out.println(q.getContents());
             System.out.println("작성일자 " + q.getQuestionDate());
         }
@@ -111,13 +115,13 @@ public class QuestionService_he {
         System.out.println("*********************************************");
         System.out.println("질문 등록을 시작합니다.");
         System.out.println("아래 항목을 입력해주세요.");
-        System.out.println("질문 제목: ");
+        System.out.print("질문 제목: ");
         param.put("title", br.readLine());
-        System.out.println("질문 내용: ");
+        System.out.print("질문 내용: ");
         param.put("content", br.readLine());
         param.put("studentIdx", studentIdx);
         param.put("classIdx", classIdx);
-        sqlSession.insert("repository.mapper.QuestionMapper_he.insertReview", param);
+        sqlSession.insert("repository.mapper.QuestionMapper_he.insertQuestion", param);
         sqlSession.commit();
         System.out.println("등록이 완료되었습니다.");
         System.out.println("*********************************************");
@@ -125,18 +129,18 @@ public class QuestionService_he {
 
     // 질문 수정 메소드
     private void updateQuestion () throws IOException {
-        System.out.println("수정할 질문의 번호: ");
+        System.out.print("수정할 질문의 번호: ");
         int questionIdx = Integer.parseInt(br.readLine());
         System.out.println("*********************************************");
         Map<String, Object> param = new HashMap<>();
         System.out.println("질문 수정을 시작합니다.");
         System.out.println("아래 항목을 입력해주세요.");
-        System.out.println("질문 제목: ");
+        System.out.print("질문 제목: ");
         param.put("title", br.readLine());
-        System.out.println("질문 내용: ");
+        System.out.print("질문 내용: ");
         param.put("content", br.readLine());
         param.put("questionIdx", questionIdx);
-        sqlSession.update("repository.mapper.QuestionMapper_he.updateReview", param);
+        sqlSession.update("repository.mapper.QuestionMapper_he.updateQuestion", param);
         sqlSession.commit();
         System.out.println("수정이 완료되었습니다.");
         System.out.println("*********************************************");
@@ -145,7 +149,7 @@ public class QuestionService_he {
 
     // 질문 삭제 메소드
     private void deleteQuestion () throws IOException {
-        System.out.println("삭제할 질문의 번호: ");
+        System.out.print("삭제할 질문의 번호: ");
         int questionIdx = Integer.parseInt(br.readLine());
         questionMapper_he.deleteQuestion(questionIdx);
         sqlSession.commit();
