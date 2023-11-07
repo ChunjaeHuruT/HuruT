@@ -31,7 +31,7 @@
             
             
             <!-- he -->
-
+        <mapper resource="repository/mapperxml/QuestionMapper_he.xml"/>
             
     </mappers>
 </configuration>

@@ -1,5 +1,6 @@
 package main;
 
+import service.QuestionService_he;
 import service.StudentService;
 import java.util.Scanner;
 
@@ -20,7 +21,8 @@ public class HuruTMain {
 
     
     // he
-    
+    // 질의응답 기능에 필요한 서비스 인스턴스
+    static QuestionService_he questionService_he = new QuestionService_he(1, 1);
 
 
     // 필요한 기능을 메소드로 만들기
@@ -61,7 +63,8 @@ public class HuruTMain {
 
 
         // he
-
+        // 질의응답 기능을 시작하는 메소드 실행
+        questionService_he.questionMain();
 
         
         

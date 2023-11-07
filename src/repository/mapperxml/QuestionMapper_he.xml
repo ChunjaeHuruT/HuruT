@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="repository.mapper.QuestionMapper_he">
+    <!-- 특정 학생이 특정 수업에 올린 질문 목록을 보여주기 위한 SELECT문 -->
+    <select id="printMyQuestions" parameterType="java.util.Map" resultType="dto.QuestionDAO_he">
+        select *
+        from questions
+        where class_id = #{classIdx} and student_id = #{studentIdx};
+    </select>
+    <!-- 질문 추가를 위한 INSERT문 -->
+    <insert id="insertQuestion" parameterType="java.util.Map">
+        insert into questions (title, contents, student_id, class_id)
+        values (#{title},#{content},#{studentIdx},#{classIdx})
+    </insert>
+    <!-- 질문 수정을 위한 UPDATE문 -->
+    <update id="updateQuestion" parameterType="java.util.Map">
+        update questions
+        set title = #{title},
+        contents = #{contents}
+        where question_idx = #{questionIdx}
+    </update>
+
+    <!-- 질문 삭제를 위한 DELETE문 -->
+    <delete id="deleteQuestion" parameterType="int">
+        delete from questions
+        where question_idx = #{questionIdx}
+    </delete>
+</mapper>
